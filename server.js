@@ -7,11 +7,10 @@ const io = require("socket.io")(server);
 
 const { ExpressPeerServer } = require("peer");
 const peerServer = ExpressPeerServer(server, {
-  debug: false,
+  debug: true,
 });
 
 const path = require("path");
-const { POINT_CONVERSION_UNCOMPRESSED } = require("constants");
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -30,6 +29,12 @@ io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId) => {
     socket.join(roomId);
     socket.to(roomId).broadcast.emit("user-connected", userId);
+    socket.on("message", (message) => {
+      io.to(roomId).emit("createMessage", message);
+    });
+    socket.on("disconnect", () => {
+      socket.to(roomId).broadcast.emit("user-disconnected", userId);
+    });
   });
 });
 
