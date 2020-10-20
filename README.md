@@ -7,5 +7,6 @@ https://zoomvideoclone.herokuapp.com/
 ## run the app locally
 install node.js
 
-1.npm install
+1.npm install  
+
 2.node server.js
